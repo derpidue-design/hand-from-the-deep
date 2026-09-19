@@ -1,76 +1,32 @@
-# Hand from the Deep
+# Hand from the Deep — browser prototype
 
-A public game-development repository for a playable sci-fi horror RPG inspired by the original story canon established in this project.
+This repository now contains a playable browser vertical slice aimed at preserving the original story canon while making it directly playable by the creator.
 
-This repository exists to transform the story into a living, playable game world while preserving the source material as the foundation of the project.
+## How to run
 
-## Origin and project note
+Open `index.html` in a browser, or serve the directory with any local static file server.
 
-This game is based on the original story material created for the project and preserved as the canonical starting source. The repository is intended to evolve that story into a structured game world, systems design, and playable experience.
+## How to play
 
-## Project vision
+- WASD / Arrow keys: move Zero2
+- E: interact
+- SPACE: activate the Zinwave pulse during the Xevil pressure sequence
+- R: restart
+- ENTER: start the game
 
-Hand from the Deep is a sci-fi horror RPG built around:
+## Project state
 
-- unstable identity and memory
-- the relationship between Zero2 and De’juir
-- fractured reality and the Innerspace
-- the existence of the Deep and the Under Deep Unseen
-- status-driven mechanics tied to continuity, emotional overload, and system stability
-- a branching narrative where truth, survival, and identity all matter
+This is still a prototype, but it is now directly playable and represents a big step from story-only design toward a living game world.
 
-## Current status
+## Notes
 
-This project is in early game design and production planning.
+The game preserves the source story canon with an emphasis on:
+- Zero2 awakening and identity instability
+- De’juir as a stabilizing wound and companion
+- Xevil as a manipulative, identity-breaking antagonist
+- the emotional and continuity-based status systems
+- the signal that survives beyond the first fracture
 
-The repository currently contains:
+## Current goal
 
-- the canonical story foundation
-- a game design document
-- status system specification
-- milestone roadmap
-- project structure for future production work
-
-## Repository structure
-
-- `README.md` — project overview and origin note
-- `docs/story-canon.md` — preserved story canon and long-form narrative reference
-- `docs/game-design.md` — full game concept and design direction
-- `docs/status-system.md` — status mechanics specification
-- `docs/milestones.md` — roadmap from conception to playable vertical slice and beyond
-
-## Core design pillars
-
-1. Identity is a gameplay system
-2. Reality is unstable and reactive
-3. De’juir is a meaningful storyteller and gameplay anchor
-4. Status effects drive tension and progression
-5. Horror grows through truth and fractured continuity
-
-## Development goals
-
-Short term:
-- establish a playable vertical slice
-- define the status system clearly
-- build the first chapter of the game loop
-- create the first branching narrative and encounter structure
-
-Long term:
-- complete the playable game prototype
-- turn the story into a living world
-- support future creative iteration and expansion
-
-## Important note
-
-This repository is a development workspace for building the game, not a final product. The original story remains the canonical seed from which the game evolves.
-
-## Links
-
-- Story canon: `docs/story-canon.md`
-- Game design: `docs/game-design.md`
-- Status system: `docs/status-system.md`
-- Roadmap: `docs/milestones.md`
-
-## License
-
-Project-specific licensing may be added later as the game evolves. For now, the repository is intended as a design and production workspace for the original story and its adaptation process.
+Continue the playable evolution by expanding the prototype into a fuller Chapter 1 and by adding richer enemy behavior, multiple regions, and a stateful progression structure.
