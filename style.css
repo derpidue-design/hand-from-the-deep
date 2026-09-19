@@ -11,3 +11,7 @@ h1 { letter-spacing: .28em; color: #9dfcff; text-shadow: 3px 3px #542c78; margin
 canvas { width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; border: 4px solid #514d8a; box-shadow: 0 0 0 4px #171735, 0 0 30px #7b42c9; background: #080817; }
 .controls, .origin { color: #858bbd; font-size: .75rem; line-height: 1.5; }
 .origin { max-width: 850px; margin: 8px auto; color: #b49acc; }
+.web-controls { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 12px 0 2px; min-height: 30px; }
+button { font: inherit; font-size: .72rem; color: #dffcff; background: #171735; border: 1px solid #7166b5; padding: 7px 10px; cursor: pointer; }
+button:hover, button:focus-visible { background: #2b2454; border-color: #9dfcff; outline: none; }
+#save-status { color: #a9a7d7; font-size: .7rem; }

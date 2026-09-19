@@ -1,0 +1,10 @@
+{
+  "name": "Hand from the Deep — 16-bit Prototype",
+  "short_name": "Hand from the Deep",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#05050d",
+  "theme_color": "#080817",
+  "description": "A browser-based sci-fi horror RPG vertical slice rooted in the original Hand from the Deep story canon.",
+  "icons": []
+}
