@@ -1,0 +1,45 @@
+{
+  "name": "hand-from-the-deep",
+  "version": "0.1.0",
+  "description": "Hand from the Deep — a browser-hybrid 16-bit sci-fi horror prototype.",
+  "private": true,
+  "main": "desktop/main.js",
+  "author": "derpidue-design",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis portable",
+    "build:dir": "electron-builder --win dir"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.derpidue.handfromthedeep",
+    "productName": "Hand from the Deep",
+    "files": [
+      "index.html",
+      "style.css",
+      "game.js",
+      "browser-shell.js",
+      "manifest.json",
+      "sw.js",
+      "desktop/**/*",
+      "docs/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "artifactName": "Hand-from-the-Deep-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Hand from the Deep"
+    }
+  }
+}
