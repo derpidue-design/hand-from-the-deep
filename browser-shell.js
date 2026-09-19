@@ -1,6 +1,7 @@
 /* Browser hybrid shell: persistence and installability around the canvas slice. */
 (() => {
   const api = window.__handFromTheDeep;
+  const startButton = document.getElementById('start-game');
   const saveButton = document.getElementById('save-game');
   const loadButton = document.getElementById('load-game');
   const status = document.getElementById('save-status');
@@ -9,6 +10,14 @@
   if (!api || !saveButton || !loadButton) return;
 
   const setStatus = (message) => { status.textContent = message; };
+
+  const start = () => {
+    api.startGame();
+    if (startButton) startButton.hidden = true;
+    document.getElementById('game')?.focus();
+  };
+
+  if (startButton) startButton.addEventListener('click', start);
 
   const continuity = () => {
     const g = api.game;
@@ -40,6 +49,7 @@
       g.flags = { ...g.flags, ...(saved.flags || {}) };
       g.choice = saved.choice || null;
       if (saved.player) { g.player.x = saved.player.x; g.player.y = saved.player.y; }
+      if (g.mode !== 'title' && startButton) startButton.hidden = true;
       g.message = 'CONTINUITY RESTORED.';
       g.hint = 'The V.R.P. remembers what you chose.';
       setStatus(`Restored ${new Date(saved.savedAt).toLocaleTimeString()}`);
