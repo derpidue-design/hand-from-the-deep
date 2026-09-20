@@ -6,6 +6,34 @@ const W = canvas.width;
 const H = canvas.height;
 const keys = new Set();
 
+const AWARD_CATALOG = {
+  first_signal: {
+    title: 'First Signal',
+    summary: 'Zero2 is recognized before memory is restored.',
+    lore: 'The first signal did not originate with the colony. It was a call from the Deep, threading through the old S.H.C. archive and naming Zero2 before the hive had a chance to understand her.'
+  },
+  wound_companion: {
+    title: 'Wound-Bound Companion',
+    summary: 'De’juir is revealed as a stabilizing anchor.',
+    lore: 'De’juir is not a simple guide. The older synthoid is a surviving emotional wound: a fragment of memory bound to Zero2 to keep her from splitting apart under pressure.'
+  },
+  archive_fragment: {
+    title: 'Archive Fragment',
+    summary: 'The buried memory confirms Zero2 was not the first.',
+    lore: 'The shard beneath the corridor is a record from an earlier cycle. Zero2 was not the initial design, but a recovery model seeded into the HIVE to continue someone else’s unfinished refusal.'
+  },
+  refusal_of_the_name: {
+    title: 'Refusal of the Name',
+    summary: 'Zero2 rejects the identity the Deep tries to claim.',
+    lore: 'The Deep does not merely hunt the machine. It wants to replace the self with a new purpose. Zero2’s refusal is the first true act of autonomy in a system built for obedience.'
+  },
+  listening_depth: {
+    title: 'The Deep Is Listening',
+    summary: 'The signal survives and the world remembers her.',
+    lore: 'When the Zinwave pulse carries beyond the fracture, the Deep hears her name and records it. The story does not end with escape; it begins with an ongoing negotiation between memory, identity, and the unseen ocean below.'
+  }
+};
+
 addEventListener('keydown', (e) => {
   const k = e.key.toLowerCase();
   if ([' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) e.preventDefault();
@@ -57,6 +85,12 @@ function resetGame() {
     flash: 0,
     timer: 0,
     enemies: [],
+    awards: {
+      unlocked: [],
+      recent: null,
+      recentLore: '',
+      flash: 0
+    },
     rooms: {
       awakening: { x: 0, y: 0, w: 960, h: 540 },
       corridor: { x: 0, y: 0, w: 960, h: 540 },
@@ -75,6 +109,16 @@ function say(msg, hint = '') {
 
 function changeStatus(name, amount) {
   game.statuses[name] = clamp(game.statuses[name] + amount, 0, 100);
+}
+
+function unlockAward(key) {
+  const award = AWARD_CATALOG[key];
+  if (!award || game.awards.unlocked.includes(key)) return;
+
+  game.awards.unlocked.push(key);
+  game.awards.recent = award.title;
+  game.awards.recentLore = award.lore;
+  game.awards.flash = 180;
 }
 
 function makeEnemy(x, y, type = 'parasite') {
@@ -106,6 +150,7 @@ function interact() {
   if (game.scene === 'awakening' && near(p, game.node, 60)) {
     game.flags.intro = true;
     game.scene = 'diagnostic';
+    unlockAward('first_signal');
     say('Z.I.N. STATUS: ACTIVE / LINK: DEGRADED', 'De’juir is near. Approach the older Synthoid.');
     changeStatus('memory', 8);
     changeStatus('flux', 8);
@@ -115,6 +160,7 @@ function interact() {
   if (game.scene === 'diagnostic' && near(p, game.dejuir, 70)) {
     game.flags.dejuir = true;
     game.scene = 'corridor';
+    unlockAward('wound_companion');
     say('DE’JUIR: YOUR NODE IS RESPONDING TO EMOTIONAL ACTIVITY.', 'Find the memory fragment and avoid the shifting corridor.');
     changeStatus('sync', 12);
     changeStatus('stability', 8);
@@ -124,6 +170,7 @@ function interact() {
   if (game.scene === 'corridor' && near(p, game.shard, 52)) {
     game.flags.memory = true;
     game.scene = 'xevil';
+    unlockAward('archive_fragment');
     say('MEMORY FRAGMENT RECOVERED: YOU ARE NOT THE FIRST ZERO2.', 'Xevil is near. Manage the spike before it overwhelms the node.');
     changeStatus('memory', 22);
     changeStatus('flux', 24);
@@ -143,6 +190,8 @@ function interact() {
     game.flags.signal = true;
     game.flags.final = true;
     game.scene = 'ending';
+    unlockAward('refusal_of_the_name');
+    unlockAward('listening_depth');
     say('ZERO2: I AM NOT GOING WITH YOU.', 'The signal survives. The Deep has heard her name.');
   }
 }
@@ -242,6 +291,7 @@ function update() {
     updateEnemyAI();
 
     if (game.flash > 0) game.flash--;
+    if (game.awards.flash > 0) game.awards.flash--;
     game.particles = game.particles.filter((pt) => {
       pt.x += pt.vx;
       pt.y += pt.vy;
@@ -302,6 +352,41 @@ function drawStatusPanel() {
   bar('FRACTURE', s.fracture, 30, 206, '#ea81b1');
   bar('CONTAM.', s.contamination, 30, 224, '#8b8a93');
   bar('SYNC', Math.min(100, s.sync + s.anchor * 0.5), 30, 242, '#f0c96f');
+}
+
+function drawAwardPanel() {
+  const panelX = W - 270;
+  const panelY = 110;
+  rect(panelX, panelY, 250, 210, '#0b0c1d');
+  text('ARCHIVE // AWARDS', panelX + 16, panelY + 22, 12, '#f2c26b');
+  text(`${game.awards.unlocked.length}/${Object.keys(AWARD_CATALOG).length}`, panelX + 16, panelY + 40, 11, '#8fe8ff');
+
+  if (game.awards.unlocked.length === 0) {
+    text('NO FILED NOTES YET', panelX + 16, panelY + 72, 10, '#8b92bb');
+    text('Complete the sequence to reveal the world canon.', panelX + 16, panelY + 90, 9, '#7f8ac0');
+    return;
+  }
+
+  const recent = game.awards.unlocked.slice(-3);
+  recent.forEach((key, index) => {
+    const award = AWARD_CATALOG[key];
+    const y = panelY + 64 + index * 52;
+    text(award.title.toUpperCase(), panelX + 16, y, 9, '#f9dca4');
+    text(award.summary, panelX + 16, y + 12, 9, '#dbe5ff');
+  });
+}
+
+function drawAwardBanner() {
+  if (!game.awards.recent || game.awards.flash <= 0) return;
+
+  const alpha = clamp(game.awards.flash / 90, 0, 1);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  rect(240, H - 160, W - 480, 92, '#10172c');
+  text('ARCHIVE ENTRY UNLOCKED', 270, H - 128, 12, '#f7d691');
+  text(game.awards.recent.toUpperCase(), 270, H - 100, 16, '#8ee7ff');
+  text(game.awards.recentLore, 270, H - 78, 9, '#dfe6ff');
+  ctx.restore();
 }
 
 function drawPlayer() {
@@ -390,6 +475,7 @@ function draw() {
 
   drawBackground();
   drawStatusPanel();
+  drawAwardPanel();
 
   if (game.scene === 'awakening' || game.scene === 'diagnostic') {
     drawNode(game.node.x, game.node.y, 'NODE', '#57d0ff');
@@ -410,6 +496,7 @@ function draw() {
   drawEnemies();
   drawPlayer();
   drawParticles();
+  drawAwardBanner();
   drawMessage();
 
   if (game.flash > 0) {
@@ -432,4 +519,4 @@ function loop() {
 loop();
 
 // Expose a tiny debug mode for local testing in devtools
-window.__handFromTheDeep = { game, startGame, resetGame, pulse };
+window.__handFromTheDeep = { game, startGame, resetGame, pulse, unlockAward, AWARD_CATALOG };
