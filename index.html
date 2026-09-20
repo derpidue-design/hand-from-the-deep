@@ -12,7 +12,22 @@
   <main>
     <h1>HAND FROM THE DEEP</h1>
     <p class="subtitle">A playable 16-bit vertical slice — The Voice That Knew Her Name</p>
-    <canvas id="game" width="960" height="540" aria-label="Hand from the Deep playable game"></canvas>
+    <section class="game-frame" aria-label="Game area">
+      <canvas id="game" width="960" height="540" tabindex="0" aria-label="Hand from the Deep playable game"></canvas>
+      <button id="start-game" class="start-game" type="button" aria-label="Start Hand from the Deep"><span aria-hidden="true">▶</span> Start game</button>
+    </section>
+    <div class="touch-controls" aria-label="Touch controls">
+      <div class="d-pad">
+        <button type="button" data-key="arrowup" aria-label="Move up">▲</button>
+        <button type="button" data-key="arrowleft" aria-label="Move left">◀</button>
+        <button type="button" data-key="arrowdown" aria-label="Move down">▼</button>
+        <button type="button" data-key="arrowright" aria-label="Move right">▶</button>
+      </div>
+      <div class="action-pad">
+        <button type="button" data-key="e" aria-label="Interact">E<br><small>Interact</small></button>
+        <button type="button" data-key=" " aria-label="Use Zinwave pulse">Pulse</button>
+      </div>
+    </div>
     <div class="web-controls" aria-label="Browser game controls">
       <button id="save-game" type="button">Save Continuity</button>
       <button id="load-game" type="button">Restore Continuity</button>
