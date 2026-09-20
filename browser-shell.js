@@ -1,4 +1,4 @@
-/* Browser hybrid shell: persistence, startup, and installability around the canvas slice. */
+/* Browser hybrid shell: persistence, startup, touch controls, and installability. */
 (() => {
   const api = window.__handFromTheDeep;
   const startButton = document.getElementById('start-game');
@@ -22,6 +22,28 @@
   if (startButton) startButton.addEventListener('click', start);
   addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && getGame().mode === 'title') start();
+  });
+
+  // Touch buttons reuse the same keyboard input path as desktop controls.
+  document.querySelectorAll('[data-key]').forEach((button) => {
+    const keyName = button.dataset.key;
+    const send = (type) => {
+      window.dispatchEvent(new KeyboardEvent(type, { key: keyName, bubbles: true }));
+      button.classList.toggle('active', type === 'keydown');
+    };
+    button.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      button.setPointerCapture?.(event.pointerId);
+      send('keydown');
+    });
+    button.addEventListener('pointerup', (event) => {
+      event.preventDefault();
+      send('keyup');
+    });
+    button.addEventListener('pointercancel', () => send('keyup'));
+    button.addEventListener('pointerleave', (event) => {
+      if (event.buttons) send('keyup');
+    });
   });
 
   const continuity = () => {
@@ -60,7 +82,7 @@
   if (loadButton) loadButton.addEventListener('click', restore);
   addEventListener('beforeunload', () => save(true));
   setInterval(() => { if (getGame().mode === 'playing') save(true); }, 10000);
-  if (localStorage.getItem(key)) setStatus('Continuity available');
+  try { if (localStorage.getItem(key)) setStatus('Continuity available'); } catch { setStatus('Local saves unavailable'); }
 
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => setStatus('Offline shell unavailable'));
